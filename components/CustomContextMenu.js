@@ -23,12 +23,15 @@ export default function CustomContextMenu(props) {
   const { allNavPages } = props
   const router = useRouter()
   /**
-   * 随机跳转文章
+   * 跳转到最新文章
    */
   function handleJumpToRandomPost() {
-    const randomIndex = Math.floor(Math.random() * allNavPages.length)
-    const randomPost = allNavPages[randomIndex]
-    router.push(`${siteConfig('SUB_PATH', '')}/${randomPost?.slug}`)
+    // 获取最新文章（按发布时间排序的第一个）
+    const sortedPosts = [...allNavPages].sort((a, b) => {
+      return new Date(b.publishDate || b.createdDate || 0) - new Date(a.publishDate || a.createdDate || 0)
+    })
+    const latestPost = sortedPosts[0]
+    router.push(`${siteConfig('SUB_PATH', '')}/${latestPost?.slug}`)
   }
 
   useLayoutEffect(() => {
